@@ -17,7 +17,7 @@
   Function Declarations for builtin shell commands:
  */
 int lsh_cd(char **args);
-int mypwd();
+int mypwd(char **args);
 int myecho(char **args);
 int mycat(char **args);
 int lsh_help(char **args);
@@ -289,7 +289,7 @@ void lsh_loop(void)
  * @brief Laya's "pwd" implementation
    @return Always returns 1, to continue executing.
  */
-int mypwd() {
+int mypwd(char **args) {
     char *cwd = getcwd(NULL, 0); 
 
     if (cwd != NULL) {
