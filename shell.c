@@ -17,6 +17,9 @@
   Function Declarations for builtin shell commands:
  */
 int lsh_cd(char **args);
+int mypwd();
+int myecho(char **args);
+int mycat(char **args);
 int lsh_help(char **args);
 int lsh_exit(char **args);
 
@@ -25,11 +28,17 @@ int lsh_exit(char **args);
  */
 char *builtin_str[] = {
     "cd",
+    "pwd",
+    "echo",
+    "cat",
     "help",
     "exit"};
 
 int (*builtin_func[])(char **) = {
     &lsh_cd,
+    &mypwd,
+    &myecho,
+    &mycat,
     &lsh_help,
     &lsh_exit};
 
@@ -274,6 +283,60 @@ void lsh_loop(void)
         free(line);
         free(args);
     } while (status);
+}
+
+/**
+ * @brief Laya's "pwd" implementation
+   @return Always returns 1, to continue executing.
+ */
+int mypwd() {
+    char *cwd = getcwd(NULL, 0); 
+
+    if (cwd != NULL) {
+        printf("♡ Current path: %s\n", cwd);
+        free(cwd);
+        return 1;
+    }
+    perror("error during getcwd()");
+    return 1;
+}
+
+/**
+ * @brief Laya's "echo" implementation
+   @return Always returns 1, to continue executing.
+ */
+int myecho(char **args) {
+    if (args[1] == NULL) {
+        printf("♡ Nothing to print\n");
+        return 1;
+    }
+    printf("%s\n", args[1]);
+    return 1;
+}
+
+/**
+ * @brief Laya's "cat" implementation
+   @return Always returns 1, to continue executing.
+ */
+int mycat(char **args) {
+    if (args[1] == NULL) {
+        printf("♡ File path argument expected");
+        return 1;
+    }
+
+    FILE *file = fopen(args[1], "r");
+    if (file == NULL){
+        perror("error during cat");
+        return 1;
+    }
+
+    int ch;
+    while ((ch = fgetc(file)) != EOF){
+        putchar(ch);
+    }
+
+    fclose(file);
+    return 1;
 }
 
 /**
