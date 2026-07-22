@@ -320,7 +320,7 @@ int myecho(char **args) {
  */
 int mycat(char **args) {
     if (args[1] == NULL) {
-        printf("♡ File path argument expected");
+        printf("♡ File path argument expected\n");
         return 1;
     }
 
